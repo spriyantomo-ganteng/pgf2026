@@ -45,6 +45,10 @@
             border-radius: 8px;
             overflow: hidden;
             background-color: #000;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         video, iframe {
@@ -61,9 +65,14 @@
         }
 
         .error-msg {
+            background-color: rgba(255, 107, 107, 0.15);
+            border: 1px solid #ff6b6b;
             color: #ff6b6b;
-            margin-top: 10px;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 15px;
             font-size: 0.85rem;
+            text-align: left;
             display: none;
         }
     </style>
@@ -74,27 +83,34 @@
         <h1>Live / Playback Video Stream</h1>
 
         <div class="video-wrapper">
-            <!-- Gunakan tag video jika sumbernya adalah file langsung / HLS stream -->
             <video id="videoStream" controls autoplay muted playsinline>
                 <source src="http://10.101.209.97/video.mp4" type="video/mp4">
                 Browser Anda tidak mendukung pemutar video HTML5.
             </video>
-            
-            <!-- Alternatif Iframe jika server 10.101.209.97 menampilkan dashboard web/CCTV stream -->
-            <!-- <iframe src="http://10.101.209.97/" frameborder="0" allowfullscreen></iframe> -->
         </div>
 
-        <div id="errorNotification" class="error-msg">Gagal memuat stream video. Pastikan path URL benar dan server aktif.</div>
+        <div id="errorNotification" class="error-msg">
+            <strong>Gagal Memuat Stream:</strong> 
+            <span id="errorReason">Pastikan path URL benar, server aktif, atau tidak terhalang kebijakan Mixed Content (HTTPS ke HTTP).</span>
+        </div>
+
         <p class="status">Source IP: <strong>10.101.209.97</strong></p>
     </div>
 
     <script>
         const video = document.getElementById('videoStream');
         const errorMsg = document.getElementById('errorNotification');
+        const errorReason = document.getElementById('errorReason');
 
-        video.addEventListener('error', function() {
+        // Deteksi jika halaman HTTPS memanggil sumber HTTP (Mixed Content Error)
+        if (window.location.protocol === 'https:' && video.querySelector('source').src.startsWith('http:')) {
             errorMsg.style.display = 'block';
-            console.error("Error memuat video dari sumber.");
+            errorReason.textContent = "Diblokir browser karena 'Mixed Content' (Halaman HTTPS tidak dapat memuat video HTTP langsung). Jalankan file secara lokal (file://) atau gunakan server HTTPS.";
+        }
+
+        video.addEventListener('error', function(e) {
+            errorMsg.style.display = 'block';
+            console.error("Error pemutaran video:", e);
         });
     </script>
 

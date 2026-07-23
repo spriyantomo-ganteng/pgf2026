@@ -5,76 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Video Stream Player</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #121212;
-            color: #ffffff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 20px;
+            background-color: #121212; color: #ffffff;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            min-height: 100vh; padding: 20px;
         }
-
         .container {
-            width: 100%;
-            max-width: 900px;
-            background-color: #1e1e1e;
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-            text-align: center;
+            width: 100%; max-width: 900px; background-color: #1e1e1e;
+            border-radius: 12px; padding: 24px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5); text-align: center;
         }
-
-        h1 {
-            margin-bottom: 20px;
-            font-size: 1.8rem;
-            color: #e0e0e0;
-        }
-
+        h1 { margin-bottom: 20px; font-size: 1.8rem; color: #e0e0e0; }
         .video-wrapper {
-            position: relative;
-            width: 100%;
-            border-radius: 8px;
-            overflow: hidden;
-            background-color: #000;
-            min-height: 300px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            position: relative; width: 100%; border-radius: 8px; overflow: hidden; background-color: #000;
         }
-
-        video, iframe {
-            width: 100%;
-            height: auto;
-            max-height: 500px;
-            display: block;
-        }
-
-        .status {
-            margin-top: 15px;
-            font-size: 0.9rem;
-            color: #aaa;
-        }
-
-        .error-msg {
-            background-color: rgba(255, 107, 107, 0.15);
-            border: 1px solid #ff6b6b;
-            color: #ff6b6b;
-            padding: 12px;
-            border-radius: 6px;
-            margin-top: 15px;
-            font-size: 0.85rem;
-            text-align: left;
-            display: block; /* Ditampilkan secara default untuk indikasi error */
-        }
+        video { width: 100%; height: auto; max-height: 500px; display: block; }
+        .status { margin-top: 15px; font-size: 0.9rem; color: #aaa; }
     </style>
 </head>
 <body>
@@ -83,36 +30,15 @@
         <h1>Live / Playback Video Stream</h1>
 
         <div class="video-wrapper">
+            <!-- Tambahkan proksi HTTPS di depan URL stream lokal Anda -->
             <video id="videoStream" controls autoplay muted playsinline>
-                <source src="http://10.101.209.97/video.mp4" type="video/mp4">
+                <source src="https://api.allorigins.win/raw?url=http://10.101.209.97/video.mp4" type="video/mp4">
                 Browser Anda tidak mendukung pemutar video HTML5.
             </video>
         </div>
 
-        <div id="errorNotification" class="error-msg">
-            <strong>Gagal Memuat Stream:</strong> 
-            <span id="errorReason">Diblokir browser karena 'Mixed Content' (Halaman HTTPS tidak dapat memuat video HTTP langsung). Jalankan file secara lokal (file://) atau gunakan server HTTPS.</span>
-        </div>
-
-        <p class="status">Source IP: <strong>10.101.209.97</strong></p>
+        <p class="status">Source IP: <strong>10.101.209.97 (Proxied via HTTPS)</strong></p>
     </div>
-
-    <script>
-        const video = document.getElementById('videoStream');
-        const errorMsg = document.getElementById('errorNotification');
-        const errorReason = document.getElementById('errorReason');
-
-        // Pengecekan otomatis protokol Mixed Content
-        if (window.location.protocol === 'https:' && video.querySelector('source').src.startsWith('http:')) {
-            errorMsg.style.display = 'block';
-            errorReason.textContent = "Diblokir browser karena 'Mixed Content' (Halaman HTTPS tidak dapat memuat video HTTP langsung). Jalankan file secara lokal (file://) atau gunakan server HTTPS.";
-        }
-
-        video.addEventListener('error', function(e) {
-            errorMsg.style.display = 'block';
-            console.error("Error pemutaran video / koneksi timeout:", e);
-        });
-    </script>
 
 </body>
 </html>
